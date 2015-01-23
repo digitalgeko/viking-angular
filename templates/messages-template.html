@@ -1,0 +1,6 @@
+<div class='alert' ng-repeat='message in messages' ng-class=' "alert-" +  message.type'>
+	{{message.text}}
+	<span class='pull-right mouse-over-hand' ng-click="removeMessage(message)">
+		<i class='icon-remove'></i>
+	</span>
+</div>

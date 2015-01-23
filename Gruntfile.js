@@ -5,6 +5,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-contrib-copy');
 
 	grunt.initConfig({
 		coffee: {
@@ -49,6 +50,14 @@ module.exports = function(grunt) {
 				}
 			}
 		},
+
+		copy: {
+			main: {
+				files: [
+					{expand: true, src: ['lib/**'], dest: 'dist'}
+				]
+			}
+		},
 		
 		clean: ["dist"],
 		
@@ -63,7 +72,7 @@ module.exports = function(grunt) {
 		}
 	});
 
-	grunt.registerTask('build', ['coffee', 'html2js', 'uglify']);
+	grunt.registerTask('build', ['coffee', 'html2js', 'uglify', 'copy']);
 
 	return grunt;
 };
