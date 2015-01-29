@@ -1,1 +1,1 @@
-angular.module('viking.angular', ["viking.angular.templates"])
+angular.module('viking.angular', ["viking.angular.templates", "ngTagsInput"])
