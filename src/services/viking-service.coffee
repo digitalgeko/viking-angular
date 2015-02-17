@@ -5,10 +5,7 @@ angular.module('viking.angular').factory '$viking', ->
 	self.init = (portletId, scope) ->
 		self.portletId = portletId
 		self.scope = scope
-		self.populate portletId, scope
-
-	self.populate = (portletId, scope) ->
-		_.assign scope, VK.getPortletData(portletId)
+		_.assign scope, VK.getPortletData(portletId)		
 
 	self.ready = (callback) -> AUI().ready 'liferay-portlet-url', callback
 	self.route = (route, params = {}, routeType = "resource") ->
