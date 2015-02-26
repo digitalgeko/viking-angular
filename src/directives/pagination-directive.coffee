@@ -10,10 +10,11 @@ angular.module('viking.angular').directive 'vkPagination', ->
 			scope.setPageCount = (pageCount) ->
 				scope.pageCount = pageCount
 				scope.pages = _.range(1, pageCount+1)
-				if !scope.currentPage
-					scope.currentPage = 1
-				else if scope.currentPage >= scope.pageCount
-					scope.currentPage = scope.pageCount
+				if scope.currentPage == undefined
+					scope.setCurrentPage 1
+				
+				if scope.currentPage > scope.pageCount
+					scope.setCurrentPage scope.pageCount
 
 			scope.$watchCollection 'vkPagination', (paginationInfo) ->
 				console.log paginationInfo

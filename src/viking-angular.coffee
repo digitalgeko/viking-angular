@@ -1,6 +1,7 @@
 angular.module('viking.angular', ["viking.angular.templates", "ngTagsInput"])
 
 (->
+	regexISO8601DateFormat =  /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+)|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d)|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d)/
 	convertDateStringsToDates = (input) ->
 		if typeof input != 'object'
 			return input
@@ -11,9 +12,8 @@ angular.module('viking.angular', ["viking.angular.templates", "ngTagsInput"])
 			match = undefined
 
 			if typeof value == 'string'
-				date = new Date(value)
-				if date instanceof Date && !isNaN(date.valueOf())
-					input[key] = date
+				if value.match regexISO8601DateFormat
+					input[key] = new Date(value)
 			else if typeof value == 'object'
 				convertDateStringsToDates value
 		return
