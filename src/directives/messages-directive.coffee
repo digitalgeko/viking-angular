@@ -13,11 +13,7 @@ angular.module('viking.angular').directive 'vkMessages', ['$timeout', ($timeout)
 				scope.messages.splice scope.messages.indexOf(message), 1
 
 			scope.$on scope.vkChannel, (e, message) ->
-				scope.messages.push message
-				$timeout ->
-					scope.removeMessage message
-					scope.$apply()
-				, 10000
+				scope.messages = [message]
 				scope.$apply()
 	}
 ]
