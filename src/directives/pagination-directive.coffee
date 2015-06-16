@@ -17,7 +17,6 @@ angular.module('viking.angular').directive 'vkPagination', ->
 					scope.setCurrentPage scope.pageCount
 
 			scope.$watchCollection 'vkPagination', (paginationInfo) ->
-				console.log paginationInfo
 				if paginationInfo
 					if paginationInfo.pageCount
 						scope.setPageCount paginationInfo.pageCount

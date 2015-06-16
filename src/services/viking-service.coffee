@@ -16,7 +16,7 @@
 				convertDateStringsToDates value
 		return
 
-	angular.module('viking.angular').factory '$viking', [ '$interval', ($interval) ->
+	angular.module('viking.angular').factory '$viking', [ '$interval', '$q', ($interval, $q) ->
 
 		self = {}
 
@@ -27,39 +27,47 @@
 			convertDateStringsToDates portletData
 			_.assign scope, portletData
 
-		self.ready = (callback) ->
+		# self.ready = (callback) ->
 			
-			executeCallback = _.once ->
-				$interval.cancel readyInterval
-				callback()
+		# 	executeCallback = _.once ->
+		# 		$interval.cancel readyInterval
+		# 		callback()
 
-			readyInterval = $interval ->
-				if Liferay.PortletURL
-					executeCallback()		
-			, 1000
+		# 	readyInterval = $interval ->
+		# 		if Liferay.PortletURL
+		# 			executeCallback()		
+		# 	, 1000
 			
-			AUI().ready 'liferay-portlet-url', executeCallback
+		# 	AUI().ready 'liferay-portlet-url', executeCallback
 
-		self.route = (route, params = {}, routeType = "resource") ->
-			liferayURL = switch
-				when routeType == "render" then Liferay.PortletURL.createRenderURL()
-				when routeType == "action" then Liferay.PortletURL.createActionURL()
-				when routeType == "permission" then Liferay.PortletURL.createPermissionURL()
-				else Liferay.PortletURL.createResourceURL()
+		self.route = (route, params = {}, options = {}) ->
+			$q (resolve, reject) ->
+				AUI().use 'liferay-portlet-url', (A) ->
+					navigationURL;
+					portletURL = Liferay.PortletURL.createRenderURL();
 
-			liferayURL.setPortletId self.portletId
-			
-			for key, value of params
-				liferayURL.params[key] = value.toString()
+					liferayURL = switch
+						when options.routeType == "render" then Liferay.PortletURL.createRenderURL()
+						when options.routeType == "action" then Liferay.PortletURL.createActionURL()
+						when options.routeType == "permission" then Liferay.PortletURL.createPermissionURL()
+						else Liferay.PortletURL.createResourceURL()
 
-			routeParts = route.split(".")
-			if routeParts[0]
-				liferayURL.params["VIKING_controller"] = "controllers."+routeParts[0]
-			else
-				liferayURL.params["VIKING_controller"] = self.scope.VIKING_FRAMEWORK_PARAMS.controllerName
-			liferayURL.params["VIKING_action"] = routeParts[1]
+					liferayURL.setPortletId self.portletId
+					
+					for key, value of params
+						liferayURL.params[key] = value.toString()
 
-			liferayURL.toString()
+					for key, value of options.reservedParams
+						liferayURL.reservedParams[key] = value.toString()
+
+					routeParts = route.split(".")
+					if routeParts[0]
+						liferayURL.params["VIKING_controller"] = "controllers."+routeParts[0]
+					else
+						liferayURL.params["VIKING_controller"] = self.scope.VIKING_FRAMEWORK_PARAMS.controllerName
+					liferayURL.params["VIKING_action"] = routeParts[1]
+
+					resolve liferayURL
 
 		# Messages
 		self.showMessage = (type, channel, text) ->
