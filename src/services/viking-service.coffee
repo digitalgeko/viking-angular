@@ -43,8 +43,7 @@
 		self.route = (route, params = {}, options = {}) ->
 			$q (resolve, reject) ->
 				AUI().use 'liferay-portlet-url', (A) ->
-					navigationURL;
-					portletURL = Liferay.PortletURL.createRenderURL();
+					portletURL = Liferay.PortletURL.createRenderURL()
 
 					liferayURL = switch
 						when options.routeType == "render" then Liferay.PortletURL.createRenderURL()
@@ -53,12 +52,13 @@
 						else Liferay.PortletURL.createResourceURL()
 
 					liferayURL.setPortletId self.portletId
+					liferayURL.setDoAsGroupId Liferay.ThemeDisplay.getScopeGroupId()
 					
 					for key, value of params
-						liferayURL.params[key] = value.toString()
+						liferayURL.params[key] = value.toString() if value
 
 					for key, value of options.reservedParams
-						liferayURL.reservedParams[key] = value.toString()
+						liferayURL.reservedParams[key] = value.toString() if value
 
 					routeParts = route.split(".")
 					if routeParts[0]
